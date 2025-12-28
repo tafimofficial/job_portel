@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Job Openings</h2>
+
+<form method="get" action="">
+    <input type="text" name="q" placeholder="Search by title or skills..." value="{{ request.GET.q|default:'' }}">
+    <button type="submit" class="btn">Search</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Company</th>
+            <th>Location/Info</th>
+            <th>Skills</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for job in jobs %}
+        <tr>
+            <td>{{ job.title }}</td>
+            <td>{{ job.recruiter.company_name|default:job.recruiter.username }}</td>
+            <td>{{ job.category }} ({{ job.number_of_openings }} openings)</td>
+            <td>{{ job.skills_required }}</td>
+            <td>
+                {% if user.user_type == 'jobseeker' %}
+                    {% if job.id in applied_job_ids %}
+                        <button class="btn" style="background-color: grey; cursor: default;" disabled>Applied</button>
+                    {% else %}
+                        <a href="{% url 'apply_job' job.id %}" class="btn">Apply</a>
+                    {% endif %}
+                {% else %}
+                    <span>Recruiter View</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No jobs found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

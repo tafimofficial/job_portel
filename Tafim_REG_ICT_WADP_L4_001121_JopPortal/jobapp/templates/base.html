@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tafim Job Portal</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
+        header { background-color: #450552ff; color: #fff; padding: 0.5rem 1rem; display: flex; justify-content: space-between; align-items: center; }
+        header h1 { margin: 0; font-size: 1.25rem; }
+        nav ul { list-style: none; padding: 0; }
+        nav ul li { display: inline; margin-right: 20px; }
+        nav a { color: #fff; text-decoration: none; }
+        main { padding: 20px; max-width: 800px; margin: auto; background: white; min-height: 80vh; }
+        .btn { padding: 10px 15px; background: #f803e4ff; color: white; border: none; cursor: pointer; text-decoration: none; }
+        .btn:hover { background: #ff1100ff; }
+        form p { margin-bottom: 15px; }
+        input, select, textarea { padding: 8px; width: 100%; box-sizing: border-box; border-radius: 20px; border: 1px solid #ccc; outline: none; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Tafim Job Portal</h1>
+        <nav>
+            <ul>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                    <li><a href="{% url 'manage_profile' %}">Profile</a></li>
+                    <li><a href="{% url 'job_list' %}">Jobs</a></li>
+                    {% if user.user_type == 'recruiter' %}
+                        <li><a href="{% url 'add_job' %}">Post Job</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'logout' %}">Logout ({{ user.username }})</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'register' %}">Register</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
